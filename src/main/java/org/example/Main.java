@@ -1,17 +1,69 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        try {
+            File myFile = new File("src/main/resources/input.txt");
+            Scanner myReader = new Scanner(myFile);
+            int mySafe = 0;
+            while (myReader.hasNextLine()) {
+                List<Integer> lane = new ArrayList<>();
+                String data = myReader.nextLine();
+                String[] words = data.split(" ");
+                for (String word : words) {
+                    lane.add(Integer.parseInt(word));
+                }
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+                boolean ascending = false;
+                boolean descending = false;
+                int myDiff = 3;
+
+                for (int i = 0; i < lane.size() - 1; i++) {
+                    if (lane.get(i) > lane.get(i + 1)) {
+                        if (ascending) {
+                            ascending = false;
+                            break;
+                        }
+                        else if (lane.get(i) > lane.get(i + 1) + myDiff) {
+                            descending = false;
+                            break;
+                        }
+                        descending = true;
+                    }
+                    else if (lane.get(i) < lane.get(i + 1)) {
+                        if (descending) {
+                            descending = false;
+                            break;
+                        }
+                        else if (lane.get(i) < lane.get(i + 1) - myDiff) {
+                            ascending = false;
+                            break;
+                        }
+                        ascending = true;
+                    }
+                    else {
+                        ascending = false;
+                        descending = false;
+                        break;
+                    }
+                }
+
+                if (ascending || descending) {
+                    mySafe++;
+                }
+            }
+
+            System.out.println(mySafe);
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
         }
+
     }
 }
